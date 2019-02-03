@@ -8,6 +8,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -36,12 +37,16 @@ public class Minecraft {
 		long window = glfwCreateWindow(1000, 1000, "Minecraft", NULL, NULL);
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
+		
+		float width, height;
 
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);
 			IntBuffer pHeight = stack.mallocInt(1);
 			glfwGetWindowSize(window, pWidth, pHeight);
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			width=pWidth.get(0);
+			height=pHeight.get(0);
 			glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		}
 
@@ -65,14 +70,20 @@ public class Minecraft {
 		
 		Text txt=new Text();
 
+		Camera cam=new Camera();
+		cam.pos=new Vector3f(2,2,2);
+		cam.dir=new Vector3f(cam.pos.x,cam.pos.y,cam.pos.z).normalize().negate();
+		
 		Utils.printGLError();
 
 		
 		while (!glfwWindowShouldClose(window)) {
+			//INIT FRAME
 			Utils.clearGLError();
 			glClearColor(1,1,1,1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
+			//END INIT FRAME
 			
 			mesh.setBuffer3f(0, new float[] {
 					0,0,0,
@@ -157,28 +168,45 @@ public class Minecraft {
 					20,21,22,
 					21,22,23,
 			});
-//			
-//			shader.bind();
-//			mesh.renderElements();
-			
-			Matrix4f perspective=new Matrix4f().identity().perspective(80, 1, 0.01f, 100.0f);
-			Matrix4f view=new Matrix4f().identity().lookAt(new Vector3f(2*(float)Math.cos(glfwGetTime()),3,2*(float)Math.sin(glfwGetTime())), new Vector3f(0,0,0), new Vector3f(0,-1,0));
-			
-			
+
 			txt.setText("Still rendering at time "+String.format("%.2f", (float)glfwGetTime()));
 			txt.render(-1,1, 0.025f);
 			
 			shader.bind();
-			shader.setMat4f("perspective", perspective);
-			shader.setMat4f("view", view);
+			shader.setMat4f("perspective", cam.getPerspective());
+			shader.setMat4f("view", cam.getView());
 //			shader.setMat4f("perspective", new Mat4f());
 //			shader.setMat4f("view", new Mat4f());
 			mesh.renderElements();
+			
+			
+			//CAMERA
+			
+			//DIRECTION
+			double[]xpos=new double[1];
+			double[]ypos=new double[1];
+			glfwGetCursorPos(window, xpos, ypos);
+			Vector2f mouse=new Vector2f((float)xpos[0],(float)ypos[0]);
+			cam.update(mouse);
+			if(mouse.x<0||mouse.y<0||mouse.x>width||mouse.y>height)
+//					window.setMouse(width/2,height/2);
+				glfwSetCursorPos(window, width/2, height/2);
+			glfwGetCursorPos(window, xpos, ypos);
+			mouse=new Vector2f((float)xpos[0],(float)ypos[0]);
+			cam.mouse=mouse;
+			//END DIRECTION
+			
+			//MOVEMENT
+			//END MOVEMENT
+			
+			//END CAMERA
 
+			//LEAVE FRAME
 			Utils.printGLError();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+			//END LEAVE FRAME
 		}
 	}
 

@@ -1,7 +1,7 @@
 package co.megadodo.mc;
 
-import static org.lwjgl.BufferUtils.createByteBuffer;
-import static org.lwjgl.opengl.GL11.glGetError;
+import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +20,10 @@ import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 public class Utils {
+	
+	public static float getTime() {
+		return (float)glfwGetTime();
+	}
 	
 	public static float[] convertVec3fToArray(ArrayList<Vector3f>list) {
 		float[]data=new float[list.size()*3];
@@ -64,7 +68,7 @@ public class Utils {
                 InputStream source = Utils.class.getClassLoader().getResourceAsStream(resource);
                 ReadableByteChannel rbc = Channels.newChannel(source)
             ) {
-                buffer = createByteBuffer(bufferSize);
+                buffer = BufferUtils.createByteBuffer(bufferSize);
 
                 while (true) {
                     int bytes = rbc.read(buffer);

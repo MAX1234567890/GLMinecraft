@@ -1,62 +1,20 @@
 package co.megadodo.mc;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL45.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
 import co.megadodo.mc.gl.Mesh;
 import co.megadodo.mc.gl.Shader;
 import co.megadodo.mc.gl.Text;
+import co.megadodo.mc.gl.Window;
 
 public class Minecraft {
 
 	public static void main(String[] args) {
-		GLFWErrorCallback.createPrint(System.err).set();
-
-		if (!glfwInit())
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-		long window = glfwCreateWindow(1000, 1000, "Minecraft", NULL, NULL);
-		if (window == NULL)
-			throw new RuntimeException("Failed to create the GLFW window");
-		
-		float width, height;
-
-		try (MemoryStack stack = stackPush()) {
-			IntBuffer pWidth = stack.mallocInt(1);
-			IntBuffer pHeight = stack.mallocInt(1);
-			glfwGetWindowSize(window, pWidth, pHeight);
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-			width=pWidth.get(0);
-			height=pHeight.get(0);
-			glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
-		}
-
-		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
-		glfwShowWindow(window);
-
-
-		
-		GL.createCapabilities();
+		Window window=new Window();
 		
 		System.out.println(glGetString(GL_VERSION));
 		System.out.println(glGetString(GL_VENDOR));
@@ -77,7 +35,7 @@ public class Minecraft {
 		Utils.printGLError();
 
 		
-		while (!glfwWindowShouldClose(window)) {
+		while (window.shouldContinue()) {
 			//INIT FRAME
 			Utils.clearGLError();
 			glClearColor(1,1,1,1);
@@ -169,7 +127,7 @@ public class Minecraft {
 					21,22,23,
 			});
 
-			txt.setText("Still rendering at time "+String.format("%.2f", (float)glfwGetTime()));
+			txt.setText("Still rendering at time "+String.format("%.2f", Utils.getTime()));
 			txt.render(-1,1, 0.025f);
 			
 			shader.bind();
@@ -183,17 +141,11 @@ public class Minecraft {
 			//CAMERA
 			
 			//DIRECTION
-			double[]xpos=new double[1];
-			double[]ypos=new double[1];
-			glfwGetCursorPos(window, xpos, ypos);
-			Vector2f mouse=new Vector2f((float)xpos[0],(float)ypos[0]);
+			Vector2f mouse=window.getMouse();
 			cam.update(mouse);
-			if(mouse.x<0||mouse.y<0||mouse.x>width||mouse.y>height)
+//			if(mouse.x<0||mouse.y<0||mouse.x>window.width||mouse.y>window.height)
 //					window.setMouse(width/2,height/2);
-				glfwSetCursorPos(window, width/2, height/2);
-			glfwGetCursorPos(window, xpos, ypos);
-			mouse=new Vector2f((float)xpos[0],(float)ypos[0]);
-			cam.mouse=mouse;
+			cam.mouse=window.getMouse();
 			//END DIRECTION
 			
 			//MOVEMENT
@@ -204,8 +156,7 @@ public class Minecraft {
 			//LEAVE FRAME
 			Utils.printGLError();
 
-			glfwSwapBuffers(window);
-			glfwPollEvents();
+			window.endFrame();
 			//END LEAVE FRAME
 		}
 	}

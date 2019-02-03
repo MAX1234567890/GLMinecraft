@@ -56,7 +56,6 @@ public class Camera {
 	}
 	
 	public void update(Vector2f newMouse) {
-		System.out.println(pos+" "+dir+" "+rotX+" "+rotY);
 		Vector2f diff=new Vector2f(newMouse).sub(mouse);
 		mouse=new Vector2f(newMouse);
 

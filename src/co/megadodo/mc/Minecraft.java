@@ -2,7 +2,6 @@ package co.megadodo.mc;
 
 import static org.lwjgl.opengl.GL45.*;
 
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -16,8 +15,7 @@ public class Minecraft {
 	public static void main(String[] args) {
 		Window window=new Window();
 		
-		System.out.println(glGetString(GL_VERSION));
-		System.out.println(glGetString(GL_VENDOR));
+		Utils.printGL(true);
 		
 		Mesh mesh=new Mesh();
 		mesh.addBuffer3f(0, new float[] {});
@@ -36,12 +34,14 @@ public class Minecraft {
 
 		
 		while (window.shouldContinue()) {
-			//INIT FRAME
 			Utils.clearGLError();
+			
 			glClearColor(1,1,1,1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
-			//END INIT FRAME
+			
+			
+			
 			
 			mesh.setBuffer3f(0, new float[] {
 					0,0,0,
@@ -133,31 +133,25 @@ public class Minecraft {
 			shader.bind();
 			shader.setMat4f("perspective", cam.getPerspective());
 			shader.setMat4f("view", cam.getView());
-//			shader.setMat4f("perspective", new Mat4f());
-//			shader.setMat4f("view", new Mat4f());
 			mesh.renderElements();
 			
 			
-			//CAMERA
 			
-			//DIRECTION
+			
+			
 			Vector2f mouse=window.getMouse();
 			cam.update(mouse);
 //			if(mouse.x<0||mouse.y<0||mouse.x>window.width||mouse.y>window.height)
 //					window.setMouse(width/2,height/2);
 			cam.mouse=window.getMouse();
-			//END DIRECTION
-			
-			//MOVEMENT
-			//END MOVEMENT
-			
-			//END CAMERA
 
-			//LEAVE FRAME
+
+			
+			
+			
 			Utils.printGLError();
 
 			window.endFrame();
-			//END LEAVE FRAME
 		}
 	}
 

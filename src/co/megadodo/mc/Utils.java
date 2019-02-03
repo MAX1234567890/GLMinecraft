@@ -21,6 +21,21 @@ import org.lwjgl.BufferUtils;
 
 public class Utils {
 	
+	public static void printGL(boolean ext) {
+		//GL_VENDOR, GL_RENDERER, GL_VERSION, or GL_SHADING_LANGUAGE_VERSION
+		System.out.printf("GL VENDOR ............ %s\n",glGetString(GL_VENDOR));
+		System.out.printf("GL RENDERER .......... %s\n",glGetString(GL_RENDERER));
+		System.out.printf("GL VERSION ........... %s\n",glGetString(GL_VERSION));
+		System.out.printf("GLSL VERSION ......... %s\n",glGetString(GL_SHADING_LANGUAGE_VERSION));
+		
+		if(ext) {
+			int num=glGetInteger(GL_NUM_EXTENSIONS);
+			for(int i=0;i<num;i++) {
+				System.out.printf("EXTENSION %03d ........ %s\n",i+1,glGetStringi(GL_EXTENSIONS, i));				
+			}
+		}
+	}
+	
 	public static float getTime() {
 		return (float)glfwGetTime();
 	}

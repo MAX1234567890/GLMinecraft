@@ -1,14 +1,28 @@
 package co.megadodo.mc.gl;
 
-import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import co.megadodo.mc.Utils;
-import co.megadodo.mc.math.Vec2f;
-import co.megadodo.mc.math.Vec3f;
 
 public class Mesh {
 	
@@ -50,7 +64,8 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
-	public void addBuffer3f(int attrib, ArrayList<Vec3f> list) {
+
+	public void addBuffer3f(int attrib, ArrayList<Vector3f> list) {
 		addBuffer3f(attrib,Utils.convertVec3fToArray(list));
 	}
 	public void addBuffer3f(int attrib,float[]data) {
@@ -67,10 +82,44 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
-	public void setBuffer3f(int attrib, ArrayList<Vec3f> list) {
+	public void setBuffer3f(int attrib, ArrayList<Vector3f> list) {
 		setBuffer3f(attrib,Utils.convertVec3fToArray(list));
 	}
 	public void setBuffer3f(int attrib,float[]data) {
+		glBindVertexArray(id);
+		
+		int vbo=buffers.get(attrib);
+		glBindBuffer(GL_ARRAY_BUFFER,vbo);
+		glBufferData(GL_ARRAY_BUFFER,data,GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER,0);
+		
+		glBindVertexArray(0);
+	}
+	
+	
+	
+
+	public void addBuffer2f(int attrib, ArrayList<Vector2f> list) {
+		addBuffer2f(attrib,Utils.convertVec2fToArray(list));
+	}
+	public void addBuffer2f(int attrib,float[]data) {
+		glBindVertexArray(id);
+		int vbo=glGenBuffers();
+		buffers.put(attrib, vbo);
+		
+		glBindBuffer(GL_ARRAY_BUFFER,vbo);
+		glBufferData(GL_ARRAY_BUFFER,data,GL_STATIC_DRAW);
+		glVertexAttribPointer(attrib, 2, GL_FLOAT, false, 2*Float.BYTES, 0);
+		glEnableVertexAttribArray(attrib);
+		glBindBuffer(GL_ARRAY_BUFFER,0);
+		
+		glBindVertexArray(0);
+	}
+	
+	public void setBuffer2f(int attrib, ArrayList<Vector2f> list) {
+		setBuffer2f(attrib,Utils.convertVec2fToArray(list));
+	}
+	public void setBuffer2f(int attrib,float[]data) {
 		glBindVertexArray(id);
 		
 		int vbo=buffers.get(attrib);

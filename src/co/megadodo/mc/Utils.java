@@ -21,6 +21,10 @@ import org.lwjgl.BufferUtils;
 
 public class Utils {
 	
+	public static String formatFloat(float f) {
+		return String.format("%.2f", f);
+	}
+	
 	public static void printGL(boolean ext) {
 		//GL_VENDOR, GL_RENDERER, GL_VERSION, or GL_SHADING_LANGUAGE_VERSION
 		System.out.printf("GL VENDOR ............ %s\n",glGetString(GL_VENDOR));

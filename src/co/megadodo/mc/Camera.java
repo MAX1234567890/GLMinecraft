@@ -23,6 +23,8 @@ public class Camera {
 	 */
 	public float fov;
 	
+	public float dt;
+	
 	public Camera() {
 		pos=new Vector3f(0,0,0);
 		dir=new Vector3f(0,0,0);
@@ -30,13 +32,34 @@ public class Camera {
 		rotX=0;
 		rotY=0;
 		
-		forwardSpeed=0.3f;
-		sideSpeed=0.2f;
-		backSpeed=0.1f;
+		forwardSpeed=3f;
+		sideSpeed=2f;
+		backSpeed=1f;
 		
 		fov=80;
 		
 		mouse=new Vector2f(0,0);
+		
+	}
+	
+	public void move(Vector3f dir) {
+		pos=pos.add(dir.mul(dt));
+	}
+	
+	public void moveForward() {
+		move(getForward().mul(forwardSpeed));
+	}
+	
+	public void moveBackward() {
+		move(getForward().negate().mul(backSpeed));
+	}
+	
+	public void moveLeft() {
+		move(getRight().negate().mul(sideSpeed));
+	}
+	
+	public void moveRight() {
+		move(getRight().mul(sideSpeed));
 	}
 	
 	public Vector3f getForward() {

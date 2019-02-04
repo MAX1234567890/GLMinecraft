@@ -3,8 +3,11 @@ package co.megadodo.mc.gl;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.util.ArrayList;
+
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
 public class Window {
@@ -14,6 +17,46 @@ public class Window {
 	public int height;
 	
 	private static boolean initDone=false;
+	
+	private ArrayList<Character> keysDown;
+	private ArrayList<Character> justPressed;
+	private ArrayList<Character> justReleased;
+	
+	public boolean isKeyDown(char c) {
+		return keysDown.contains(c);
+	}
+	
+	public boolean wasKeyJustPressed(char c) {
+		return justPressed.contains(c);
+	}
+	
+	public boolean wasKeyJustReleased(char c) {
+		return justReleased.contains(c);
+	}
+	
+	private void onKey(int key,int action,int mods) {
+		Character k=(char) key;
+		if(action==GLFW_PRESS) {
+//			System.out.printf("Pressed %c\n",k);
+			justPressed.add(k);
+			keysDown.add(k);
+		}else if(action==GLFW_RELEASE) {
+//			System.out.printf("Released %c\n",k);
+			justReleased.add(k);
+			keysDown.remove(k);
+		}else if(action==GLFW_REPEAT) {
+//			System.out.printf("Repeat %c\n",k);
+		}
+	}
+	
+	public void startFrame() {
+		justPressed.clear();
+		justReleased.clear();
+	}
+	
+	public void close() {
+		glfwSetWindowShouldClose(ptr, true);
+	}
 	
 	public Window() {
 		if(!initDone) {
@@ -28,6 +71,21 @@ public class Window {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		ptr=glfwCreateWindow(1000, 1000, "Minecraft", NULL, NULL);
+		
+		
+		Window self=this;
+		
+		keysDown=new ArrayList<Character>();
+		justPressed=new ArrayList<Character>();
+		justReleased=new ArrayList<Character>();
+		
+		glfwSetKeyCallback(ptr, new GLFWKeyCallback() {
+			
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				self.onKey(key,action,mods);
+			}
+		});
 
 		glfwMakeContextCurrent(ptr);
 		glfwSwapInterval(1);

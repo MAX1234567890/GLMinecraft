@@ -35,7 +35,7 @@ public class Text {
 			}
 			if(c=='\n') {
 				y--;
-				x=0;
+				x=-1;
 				continue;
 			}
 			AtlasPos p=Font.getPos(c);

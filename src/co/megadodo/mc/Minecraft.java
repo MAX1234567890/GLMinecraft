@@ -28,12 +28,21 @@ public class Minecraft {
 
 		Camera cam=new Camera();
 		cam.pos=new Vector3f(2,2,2);
-		cam.dir=new Vector3f(cam.pos.x,cam.pos.y,cam.pos.z).normalize().negate();
+		cam.dir=new Vector3f(0,0,1);
 		
 		Utils.printGLError();
 
 		
+		float lastTime=Utils.getTime();
+		
 		while (window.shouldContinue()) {
+			float curTime=Utils.getTime();
+			float dt=curTime-lastTime;
+			lastTime=curTime;
+			
+			cam.dt=dt;
+			
+			window.startFrame();
 			Utils.clearGLError();
 			
 			glClearColor(1,1,1,1);
@@ -127,7 +136,10 @@ public class Minecraft {
 					21,22,23,
 			});
 
-			txt.setText("Still rendering at time "+String.format("%.2f", Utils.getTime()));
+//			txt.setText("Still rendering at time "+String.format("%.2f", Utils.getTime()));
+			txt.setText("Minecraft\n"
+					 + "Camera position: ["+Utils.formatFloat(cam.pos.x)+", "+Utils.formatFloat(cam.pos.y)+", "+Utils.formatFloat(cam.pos.z)+"]\n"
+					 + "Camera direction: ["+Utils.formatFloat(cam.dir.x)+", "+Utils.formatFloat(cam.dir.y)+", "+Utils.formatFloat(cam.dir.z)+"]\n");
 			txt.render(-1,1, 0.025f);
 			
 			shader.bind();
@@ -145,9 +157,13 @@ public class Minecraft {
 //					window.setMouse(width/2,height/2);
 			cam.mouse=window.getMouse();
 
-
 			
+			if(window.isKeyDown('W'))cam.moveForward();
+			if(window.isKeyDown('S'))cam.moveBackward();
+			if(window.isKeyDown('A'))cam.moveLeft();
+			if(window.isKeyDown('D'))cam.moveRight();
 			
+			if(window.isKeyDown('/'))window.close();
 			
 			Utils.printGLError();
 

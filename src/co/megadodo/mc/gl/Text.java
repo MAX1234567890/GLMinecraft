@@ -9,8 +9,10 @@ public class Text {
 	public Shader shader;
 	public Mesh mesh;
 	public Texture tex;
+	public Framebuffer bgFBO;
 	
-	public Text() {
+	public Text(Framebuffer fbo) {
+		bgFBO=fbo;
 		shader=new Shader("text");
 		
 		mesh=new Mesh();
@@ -75,6 +77,9 @@ public class Text {
 		
 		tex.bind(0);
 		shader.setSampler("tex", 0);
+		
+		bgFBO.bindColor(1);
+		shader.setSampler("bg", 1);
 		
 		mesh.renderElements();
 	}

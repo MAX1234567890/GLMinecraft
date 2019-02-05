@@ -10,11 +10,31 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
-public class Window {
+public class Window implements Viewport {
+	
+	public float getX() {
+		return 0;
+	}
+	
+	public float getY() {
+		return 0;
+	}
+	
+	public float getW() {
+		return fboWidth;
+	}
+	
+	public float getH() {
+		return fboHeight;
+	}
 	
 	public long ptr;
 	public int width;
 	public int height;
+	public int fboWidth;
+	public int fboHeight;
+	
+	public static final char LSHIFT=GLFW_KEY_LEFT_SHIFT;
 	
 	private static boolean initDone=false;
 	
@@ -52,6 +72,8 @@ public class Window {
 	public void startFrame() {
 		justPressed.clear();
 		justReleased.clear();
+		updateSize();
+		updateFBOSize();
 	}
 	
 	public void close() {
@@ -79,6 +101,8 @@ public class Window {
 		justPressed=new ArrayList<Character>();
 		justReleased=new ArrayList<Character>();
 		
+		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		
 		glfwSetKeyCallback(ptr, new GLFWKeyCallback() {
 			
 			@Override
@@ -94,6 +118,7 @@ public class Window {
 		GL.createCapabilities();
 		
 		updateSize();
+		updateFBOSize();
 		
 		System.out.println("Window initialized");
 	}
@@ -111,6 +136,14 @@ public class Window {
 		glfwGetWindowSize(ptr, w, h);
 		width=w[0];
 		height=h[0];
+	}
+	
+	public void updateFBOSize() {
+		int[]w=new int[1];
+		int[]h=new int[1];
+		glfwGetFramebufferSize(ptr, w, h);
+		fboWidth=w[0];
+		fboHeight=h[0];
 	}
 	
 	public boolean shouldContinue() {

@@ -14,6 +14,7 @@ public class Camera {
 	public float forwardSpeed;
 	public float sideSpeed;
 	public float backSpeed;
+	public float vertSpeed;
 	
 	public float rotX;
 	public float rotY;
@@ -35,6 +36,7 @@ public class Camera {
 		forwardSpeed=3f;
 		sideSpeed=2f;
 		backSpeed=1f;
+		vertSpeed=1;
 		
 		fov=80;
 		
@@ -62,6 +64,14 @@ public class Camera {
 		move(getRight().mul(sideSpeed));
 	}
 	
+	public void moveUp() {
+		move(new Vector3f(0,vertSpeed,0));
+	}
+	
+	public void moveDown() {
+		move(new Vector3f(0,-vertSpeed,0));
+	}
+	
 	public Vector3f getForward() {
 		return new Vector3f(dir.x,0,dir.z).normalize();
 	}
@@ -81,7 +91,6 @@ public class Camera {
 	public void update(Vector2f newMouse) {
 		Vector2f diff=new Vector2f(newMouse).sub(mouse);
 		mouse=new Vector2f(newMouse);
-
 
 		float dx=Mathf.map(diff.y,-10,10,-Mathf.PI*0.5f,Mathf.PI*0.5f);
 		float dy=Mathf.map(diff.x,-10,10,Mathf.PI,-Mathf.PI);

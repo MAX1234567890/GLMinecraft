@@ -1,5 +1,11 @@
 package co.megadodo.mc;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL45.*;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -19,17 +25,33 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
+import co.megadodo.mc.gl.Viewport;
+
 public class Utils {
 	
 	public static String formatFloat(float f) {
 		return String.format("%.2f", f);
 	}
 	
+	public static void initGLFrame(Viewport bounds) {
+		glViewport((int)bounds.getX(),(int)bounds.getY(),(int)bounds.getW(),(int)bounds.getH());
+		glClearColor(1,1,1,1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	
+	public static void setDepth(boolean v) {
+		if(v) {
+			glEnable(GL_DEPTH_TEST);
+		}else {
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
+	
 	public static void printGL(boolean ext) {
-		//GL_VENDOR, GL_RENDERER, GL_VERSION, or GL_SHADING_LANGUAGE_VERSION
-		System.out.printf("GL VENDOR ............ %s\n",glGetString(GL_VENDOR));
-		System.out.printf("GL RENDERER .......... %s\n",glGetString(GL_RENDERER));
-		System.out.printf("GL VERSION ........... %s\n",glGetString(GL_VERSION));
+		System.out.printf("|--- OPENGL CONTEXT INFORMATION ---|\n");
+		System.out.printf("VENDOR ............... %s\n",glGetString(GL_VENDOR));
+		System.out.printf("RENDERER ............. %s\n",glGetString(GL_RENDERER));
+		System.out.printf("VERSION .............. %s\n",glGetString(GL_VERSION));
 		System.out.printf("GLSL VERSION ......... %s\n",glGetString(GL_SHADING_LANGUAGE_VERSION));
 		
 		if(ext) {

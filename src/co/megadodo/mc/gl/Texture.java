@@ -10,13 +10,14 @@ public class Texture {
 	public int id;
 	public int width;
 	public int height;
-	
+
 	public Texture(String fn) {
 		id=glGenTextures();
 		glBindTexture(GL_TEXTURE_2D,id);
 		//set params here
-		
-		
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		
 		int[]w=new int[1];
 		int[]h=new int[1];

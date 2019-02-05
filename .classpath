@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-9">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/glfw/lwjgl-glfw-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/glfw/lwjgl-glfw.jar" sourcepath="lwjgl-release-3.2.1-custom/glfw/lwjgl-glfw-sources.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/lwjgl/lwjgl-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/lwjgl/lwjgl.jar" sourcepath="lwjgl-release-3.2.1-custom/lwjgl/lwjgl-sources.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/opengl/lwjgl-opengl-javadoc.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/opengl/lwjgl-opengl.jar" sourcepath="lwjgl-release-3.2.1-custom/opengl/lwjgl-opengl-sources.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/stb/lwjgl-stb-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/stb/lwjgl-stb.jar" sourcepath="lwjgl-release-3.2.1-custom/stb/lwjgl-stb-sources.jar"/>
+	<classpathentry kind="lib" path="joml/joml-jdk8-1.9.9.jar" sourcepath="joml/joml-1.9.9-sources.jar"/>
+	<classpathentry kind="lib" path="lwjgl-release-3.2.1-custom/opengl/lwjgl-opengl-natives-macos.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

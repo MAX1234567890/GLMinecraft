@@ -54,6 +54,10 @@ public class Window implements Viewport {
 		return justReleased.contains(c);
 	}
 	
+	public void hideMouse() {
+		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
+
 	private void onKey(int key,int action,int mods) {
 		Character k=(char) key;
 		if(action==GLFW_PRESS) {
@@ -100,8 +104,6 @@ public class Window implements Viewport {
 		keysDown=new ArrayList<Character>();
 		justPressed=new ArrayList<Character>();
 		justReleased=new ArrayList<Character>();
-		
-		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		
 		glfwSetKeyCallback(ptr, new GLFWKeyCallback() {
 			

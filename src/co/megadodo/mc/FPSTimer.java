@@ -15,7 +15,7 @@ public class FPSTimer {
 		
 		times=new float[NUM_FRAMES];
 		for(int i=0;i<NUM_FRAMES;i++) {
-			times[i]=0;
+			times[i]=1.0f/60.0f;
 		}
 	}
 	

@@ -30,7 +30,7 @@ import co.megadodo.mc.gl.Viewport;
 public class Utils {
 	
 	public static String formatFloat(float f) {
-		return String.format("%.2f", f);
+		return String.format("%.3f", f);
 	}
 	
 	public static void initGLFrame(Viewport bounds) {

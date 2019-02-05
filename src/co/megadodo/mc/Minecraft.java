@@ -122,18 +122,20 @@ public class Minecraft {
 		Shader postprocess=new Shader("postprocess");
 
 		
-		float lastTime=Utils.getTime();
-		
 		Framebuffer fboWorld=new Framebuffer();
 
 		Text txt=new Text(fboWorld);
+		
+		FPSTimer fps=new FPSTimer();
+		Timer frameTimer=new Timer();
+		frameTimer.mark();
 
 		while (window.shouldContinue()) {
-			float curTime=Utils.getTime();
-			float dt=curTime-lastTime;
-			lastTime=curTime;
+			fps.countFrame();
 			
+			float dt=frameTimer.delta();
 			cam.dt=dt;
+			frameTimer.mark();
 			
 			window.startFrame();
 			Utils.clearGLError();
@@ -167,7 +169,10 @@ public class Minecraft {
 
 			txt.setText("Minecraft\n"
 					 + "Camera position: ["+Utils.formatFloat(cam.pos.x)+", "+Utils.formatFloat(cam.pos.y)+", "+Utils.formatFloat(cam.pos.z)+"]\n"
-					 + "Camera direction: ["+Utils.formatFloat(cam.dir.x)+", "+Utils.formatFloat(cam.dir.y)+", "+Utils.formatFloat(cam.dir.z)+"]\n");
+					 + "Camera direction: ["+Utils.formatFloat(cam.dir.x)+", "+Utils.formatFloat(cam.dir.y)+", "+Utils.formatFloat(cam.dir.z)+"]\n"
+					 + "FPS: "+Utils.formatFloat(fps.getFPS())+"\n"
+					 + "SPF: "+Utils.formatFloat(fps.getSPF())+"\n"
+					 + "DT: "+Utils.formatFloat(dt));
 			txt.render(-1+0.0025f,1-0.0025f, 0.03f);
 			
 			

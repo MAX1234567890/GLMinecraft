@@ -46,6 +46,18 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	public void initForModel() {
+		addBuffer3f(0, new float[] {});
+		addBuffer2f(1, new float[] {});
+		setIndices(new int[] {});
+	}
+	
+	public void setModel(ChunkModel model) {
+		setBuffer3f(0, model.pos);
+		setBuffer2f(1, model.uv);
+		setIndices(model.tris);
+	}
+	
 	public void setIndices(ArrayList<Integer> list) {
 		int[]data=new int[list.size()];
 		for(int i=0;i<list.size();i++) {

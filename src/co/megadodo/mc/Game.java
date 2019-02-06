@@ -3,6 +3,7 @@ package co.megadodo.mc;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import co.megadodo.mc.block.Chunk;
 import co.megadodo.mc.gl.Framebuffer;
 import co.megadodo.mc.gl.Mesh;
 import co.megadodo.mc.gl.Shader;
@@ -171,6 +172,9 @@ public class Game {
 		shader.setMat4f("perspective", cam.getPerspective());
 		shader.setMat4f("view", cam.getView());
 		mesh.renderElements();
+//		Chunk c=new Chunk();
+//		c.createMesh();
+//		c.render();
 		
 		fboWorld.end();
 		

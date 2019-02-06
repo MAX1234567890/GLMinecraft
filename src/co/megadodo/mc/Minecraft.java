@@ -1,12 +1,5 @@
 package co.megadodo.mc;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import co.megadodo.mc.gl.Framebuffer;
-import co.megadodo.mc.gl.Mesh;
-import co.megadodo.mc.gl.Shader;
-import co.megadodo.mc.gl.Text;
 import co.megadodo.mc.gl.Window;
 
 public class Minecraft {

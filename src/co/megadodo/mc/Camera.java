@@ -4,6 +4,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import co.megadodo.mc.gl.Window;
+
 public class Camera {
 	
 	public Vector3f pos;
@@ -42,6 +44,15 @@ public class Camera {
 		
 		mouse=new Vector2f(0,0);
 		
+	}
+	
+	public void handleInput(Window window) {
+		if(window.isKeyDown('W'))moveForward();
+		if(window.isKeyDown('S'))moveBackward();
+		if(window.isKeyDown('A'))moveLeft();
+		if(window.isKeyDown('D'))moveRight();
+		if(window.isKeyDown(' '))moveUp();
+		if(window.isKeyDown(Window.LSHIFT))moveDown();
 	}
 	
 	public void move(Vector3f dir) {

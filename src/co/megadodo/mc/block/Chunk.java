@@ -40,6 +40,15 @@ public class Chunk {
 		cm.addUV(1, 0);
 		cm.addUV(0, 1);
 		cm.addTriangle(0, 1, 2);
+
+		//Why is second triangle not displaying
+		cm.addPosition(1, 0, 0);
+		cm.addPosition(0, 1, 0);
+		cm.addPosition(1, 1, 0);
+		cm.addUV(1, 0);
+		cm.addUV(0, 1);
+		cm.addUV(1, 1);
+		cm.addTriangle(1, 2, 3);
 		return cm;
 	}
 	

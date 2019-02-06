@@ -22,8 +22,11 @@ public class Game {
 	public FPSTimer fps;
 	public Timer frameTimer;
 	public float dt;
+	public ChunkManager chunkManager;
 	
 	public void init(Window window) {
+		chunkManager=new ChunkManager();
+		chunkManager.instantiateChunk(0, 0);
 		mesh=new Mesh();
 		mesh.addBuffer3f(0, new float[] {
 				0,0,0,
@@ -152,13 +155,7 @@ public class Game {
 //		if(mouse.x<0||mouse.y<0||mouse.x>window.width||mouse.y>window.height)
 //				window.setMouse(window.width/2,window.height/2);
 		cam.mouse=window.getMouse();
-
-		if(window.isKeyDown('W'))cam.moveForward();
-		if(window.isKeyDown('S'))cam.moveBackward();
-		if(window.isKeyDown('A'))cam.moveLeft();
-		if(window.isKeyDown('D'))cam.moveRight();
-		if(window.isKeyDown(' '))cam.moveUp();
-		if(window.isKeyDown(Window.LSHIFT))cam.moveDown();
+		cam.handleInput(window);
 		
 		if(window.isKeyDown('/'))window.close();
 	}
@@ -168,10 +165,11 @@ public class Game {
 		Utils.initGLFrame(fboWorld);
 		Utils.setDepth(true);
 		
-		shader.bind();
-		shader.setMat4f("perspective", cam.getPerspective());
-		shader.setMat4f("view", cam.getView());
-		mesh.renderElements();
+//		shader.bind();
+//		shader.setMat4f("perspective", cam.getPerspective());
+//		shader.setMat4f("view", cam.getView());
+//		mesh.renderElements();
+		chunkManager.render(cam);
 //		Chunk c=new Chunk();
 //		c.createMesh();
 //		c.render();

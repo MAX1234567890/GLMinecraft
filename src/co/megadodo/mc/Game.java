@@ -12,9 +12,7 @@ import co.megadodo.mc.gl.Text;
 import co.megadodo.mc.gl.Window;
 
 public class Game {
-	
-	public Mesh mesh;
-	public Shader shader;
+
 	public Mesh quad;
 	public Shader postprocess;
 	public Text txt;
@@ -25,93 +23,15 @@ public class Game {
 	public float dt;
 	public ChunkManager chunkManager;
 	
+	public boolean inOverlay;
+	
 	public void init(Window window) {
+		inOverlay=false;
 		chunkManager=new ChunkManager();
 		chunkManager.instantiateChunk(0, 0);
-		mesh=new Mesh();
-		mesh.addBuffer3f(0, new float[] {
-				0,0,0,
-				1,0,0,
-				0,1,0,
-				1,1,0,
-
-				0,0,1,
-				1,0,1,
-				0,1,1,
-				1,1,1,
-
-				0,0,0,
-				1,0,0,
-				0,0,1,
-				1,0,1,
-
-				0,1,0,
-				1,1,0,
-				0,1,1,
-				1,1,1,
-
-				0,0,0,
-				0,1,0,
-				0,0,1,
-				0,1,1,
-
-				1,0,0,
-				1,1,0,
-				1,0,1,
-				1,1,1,
-		});
-		mesh.addBuffer3f(1, new float[] {
-				0,0,0,
-				1,0,0,
-				0,1,0,
-				1,1,0,
-
-				0,0,1,
-				1,0,1,
-				0,1,1,
-				1,1,1,
-
-				0,0,0,
-				1,0,0,
-				0,0,1,
-				1,0,1,
-
-				0,1,0,
-				1,1,0,
-				0,1,1,
-				1,1,1,
-
-				0,0,0,
-				0,1,0,
-				0,0,1,
-				0,1,1,
-
-				1,0,0,
-				1,1,0,
-				1,0,1,
-				1,1,1,
-		});
-		mesh.setIndices(new int[] {
-				0,1,2,
-				1,2,3,
-				
-				4,5,6,
-				5,6,7,
-				
-				8,9,10,
-				9,10,11,
-				
-				12,13,14,
-				13,14,15,
-				
-				16,17,18,
-				17,18,19,
-				
-				20,21,22,
-				21,22,23,
-		});		
-		shader=new Shader("test");
-		
+		chunkManager.instantiateChunk(1, 0);
+		chunkManager.instantiateChunk(0, 1);
+		chunkManager.instantiateChunk(1, 1);
 
 		cam=new Camera();
 		cam.pos=new Vector3f(2,2,2);
@@ -148,7 +68,7 @@ public class Game {
 			
 			@Override
 			public void onMouseMove(Window window, float mx, float my) {
-				if(new Vector2f(mx-window.width/2,my-window.height/2).length()<5)return;
+				if(inOverlay)return;
 				System.out.println("mouse move "+mx+" "+my);
 				cam.handleMouseMove(new Vector2f(mx-window.width/2,my-window.height/2));
 //				window.setMouse(window.width/2, window.height/2);
@@ -162,11 +82,19 @@ public class Game {
 		dt=frameTimer.delta();
 		cam.dt=dt;
 		frameTimer.mark();
-		cam.handleInput(window);
 		
+		if(!inOverlay)cam.handleInput(window);
+		
+
+		if(inOverlay)window.releaseMouse();
+		else window.hideMouse();
 
 		
 		if(window.isKeyDown('/'))window.close();
+		
+		if(window.wasKeyJustPressed(Window.ESCAPE)) {
+			inOverlay=!inOverlay;
+		}
 	}
 	
 	public void render(Window window) {			
@@ -174,14 +102,7 @@ public class Game {
 		Utils.initGLFrame(fboWorld);
 		Utils.setDepth(true);
 		
-//		shader.bind();
-//		shader.setMat4f("perspective", cam.getPerspective());
-//		shader.setMat4f("view", cam.getView());
-//		mesh.renderElements();
 		chunkManager.render(cam);
-//		Chunk c=new Chunk();
-//		c.createMesh();
-//		c.render();
 		
 		fboWorld.end();
 		
@@ -190,6 +111,7 @@ public class Game {
 		Utils.setDepth(false);
 
 		postprocess.bind();
+		postprocess.setBool("overlay",inOverlay);
 		fboWorld.bindColor(0);
 		postprocess.setSampler("tex", 0);
 		quad.renderElements();

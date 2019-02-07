@@ -36,6 +36,7 @@ public class Window implements Viewport {
 	public int fboHeight;
 	
 	public static final char LSHIFT=GLFW_KEY_LEFT_SHIFT;
+	public static final char ESCAPE=GLFW_KEY_ESCAPE;
 	
 	private static boolean initDone=false;
 	
@@ -72,6 +73,10 @@ public class Window implements Viewport {
 		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
+	public void releaseMouse() {
+		glfwSetInputMode(ptr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	
 	private void onKey(int key,int action,int mods) {
 		Character k=(char) key;
 		if(action==GLFW_PRESS) {
@@ -88,8 +93,6 @@ public class Window implements Viewport {
 	}
 	
 	public void startFrame() {
-		justPressed.clear();
-		justReleased.clear();
 		updateSize();
 		updateFBOSize();
 	}
@@ -184,6 +187,8 @@ public class Window implements Viewport {
 	
 	public void endFrame() {
 		glfwSwapBuffers(ptr);
+		justPressed.clear();
+		justReleased.clear();
 		glfwPollEvents();
 	}
 

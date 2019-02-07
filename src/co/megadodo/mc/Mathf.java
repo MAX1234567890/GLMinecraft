@@ -14,6 +14,14 @@ public class Mathf {
 		return lerp(s2,e2,norm(s1,e1,t));
 	}
 	
+	public static float cos(float f) {
+		return (float)Math.cos(f);
+	}
+	
+	public static float sin(float f) {
+		return (float)Math.sin(f);
+	}
+	
 	public static final float PI=3.1415926536f;
 	
 }

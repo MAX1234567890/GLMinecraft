@@ -10,15 +10,21 @@ public class ChunkModel {
 	public ArrayList<Vector3f> pos;
 	public ArrayList<Vector2f> uv;
 	public ArrayList<Integer> tris;
+	public Vector3f posOffset;
 	
 	public ChunkModel() {
 		pos=new ArrayList<Vector3f>();
 		uv=new ArrayList<Vector2f>();
 		tris=new ArrayList<Integer>();
+		posOffset=new Vector3f(0,0,0);
+	}
+	
+	public void setPositionOffset(float x,float y,float z) {
+		posOffset=new Vector3f(x,y,z);
 	}
 	
 	public void addPosition(float x,float y,float z) {
-		pos.add(new Vector3f(x,y,z));
+		pos.add(new Vector3f(x,y,z).add(posOffset));
 	}
 	
 	public void addUV(float u,float v) {

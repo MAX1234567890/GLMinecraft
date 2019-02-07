@@ -38,6 +38,8 @@ void main(){
     vec3 color=bg;
     if(font<0.5){
         color=1.0-color;
+    }else{
+        discard;
     }
     
     

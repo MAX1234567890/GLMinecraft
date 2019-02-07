@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import co.megadodo.mc.block.Chunk;
 import co.megadodo.mc.gl.Framebuffer;
 import co.megadodo.mc.gl.Mesh;
+import co.megadodo.mc.gl.MouseMoveCallback;
 import co.megadodo.mc.gl.Shader;
 import co.megadodo.mc.gl.Text;
 import co.megadodo.mc.gl.Window;
@@ -142,6 +143,17 @@ public class Game {
 		frameTimer.mark();
 		
 		window.hideMouse();
+		
+		window.addOnMouseMove(new MouseMoveCallback() {
+			
+			@Override
+			public void onMouseMove(Window window, float mx, float my) {
+				if(new Vector2f(mx-window.width/2,my-window.height/2).length()<5)return;
+				System.out.println("mouse move "+mx+" "+my);
+				cam.handleMouseMove(new Vector2f(mx-window.width/2,my-window.height/2));
+//				window.setMouse(window.width/2, window.height/2);
+			}
+		});
 	}
 	
 	public void update(Window window) {
@@ -150,12 +162,9 @@ public class Game {
 		dt=frameTimer.delta();
 		cam.dt=dt;
 		frameTimer.mark();
-		Vector2f mouse=window.getMouse();
-		cam.update(mouse);
-//		if(mouse.x<0||mouse.y<0||mouse.x>window.width||mouse.y>window.height)
-//				window.setMouse(window.width/2,window.height/2);
-		cam.mouse=window.getMouse();
 		cam.handleInput(window);
+		
+
 		
 		if(window.isKeyDown('/'))window.close();
 	}

@@ -6,6 +6,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.util.ArrayList;
 
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
@@ -42,6 +43,19 @@ public class Window implements Viewport {
 	private ArrayList<Character> justPressed;
 	private ArrayList<Character> justReleased;
 	
+	private ArrayList<MouseMoveCallback> mouseMove;
+	
+	private void fireMouseMove() {
+		Vector2f m=getMouse();
+		for(MouseMoveCallback mm:mouseMove) {
+			mm.onMouseMove(this,	 m.x, m.y);
+		}
+	}
+	
+	public void addOnMouseMove(MouseMoveCallback mm) {
+		mouseMove.add(mm);
+	}
+	
 	public boolean isKeyDown(char c) {
 		return keysDown.contains(c);
 	}
@@ -55,7 +69,7 @@ public class Window implements Viewport {
 	}
 	
 	public void hideMouse() {
-		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetInputMode(ptr	, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
 	private void onKey(int key,int action,int mods) {
@@ -84,6 +98,10 @@ public class Window implements Viewport {
 		glfwSetWindowShouldClose(ptr, true);
 	}
 	
+	public void setMouse(float x,float y) {
+		glfwSetCursorPos(ptr, x, y);
+	}
+	
 	public Window() {
 		if(!initDone) {
 			initDone=true;
@@ -105,11 +123,23 @@ public class Window implements Viewport {
 		justPressed=new ArrayList<Character>();
 		justReleased=new ArrayList<Character>();
 		
+		mouseMove=new ArrayList<MouseMoveCallback>();
+		
+		hideMouse();
+		
 		glfwSetKeyCallback(ptr, new GLFWKeyCallback() {
 			
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				self.onKey(key,action,mods);
+			}
+		});
+		
+		glfwSetCursorPosCallback(ptr, new GLFWCursorPosCallback() {
+			
+			@Override
+			public void invoke(long window, double xpos, double ypos) {
+				self.fireMouseMove();
 			}
 		});
 

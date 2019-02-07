@@ -8,8 +8,10 @@ public class FPSTimer {
 	public float[] times;
 	
 	public Timer timer;
+	public int frameCount;
 	
 	public FPSTimer() {
+		frameCount=0;
 		timer=new Timer();
 		timer.mark();
 		
@@ -20,6 +22,7 @@ public class FPSTimer {
 	}
 	
 	public void countFrame() {
+		frameCount++;
 		for(int i=0;i<NUM_FRAMES-1;i++) {
 			times[i]=times[i+1];
 		}

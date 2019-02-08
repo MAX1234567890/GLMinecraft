@@ -11,11 +11,6 @@ public class Camera {
 	public Vector3f pos;
 	public Vector3f dir;
 	
-	public float forwardSpeed;
-	public float sideSpeed;
-	public float backSpeed;
-	public float vertSpeed;
-	
 	public float rotX;
 	public float rotY;
 	
@@ -24,8 +19,6 @@ public class Camera {
 	 */
 	public float fov;
 	
-	public float dt;
-	
 	public Camera() {
 		pos=new Vector3f(0,0,0);
 		dir=new Vector3f(0,0,0);
@@ -33,50 +26,8 @@ public class Camera {
 		rotX=0;
 		rotY=0;
 		
-		forwardSpeed=5f;
-		sideSpeed=5f;
-		backSpeed=5f;
-		vertSpeed=5f;
-		
 		fov=80;
 		
-	}
-	
-	public void handleInput(Window window) {
-		if(window.isKeyDown('W'))moveForward();
-		if(window.isKeyDown('S'))moveBackward();
-		if(window.isKeyDown('A'))moveLeft();
-		if(window.isKeyDown('D'))moveRight();
-		if(window.isKeyDown(' '))moveUp();
-		if(window.isKeyDown(Window.LSHIFT))moveDown();
-	}
-	
-	public void move(Vector3f dir) {
-		pos=pos.add(dir.mul(dt));
-	}
-	
-	public void moveForward() {
-		move(getForward().mul(forwardSpeed));
-	}
-	
-	public void moveBackward() {
-		move(getForward().negate().mul(backSpeed));
-	}
-	
-	public void moveLeft() {
-		move(getRight().negate().mul(sideSpeed));
-	}
-	
-	public void moveRight() {
-		move(getRight().mul(sideSpeed));
-	}
-	
-	public void moveUp() {
-		move(new Vector3f(0,vertSpeed,0));
-	}
-	
-	public void moveDown() {
-		move(new Vector3f(0,-vertSpeed,0));
 	}
 	
 	public Vector3f getForward() {

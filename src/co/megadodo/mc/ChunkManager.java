@@ -182,6 +182,7 @@ public class ChunkManager {
 		Vector2i chunkCoord=getChunkCoord(new Vector2i(worldPos.x,worldPos.z));
 		Chunk c=getChunk(chunkCoord);
 		Vector3i posInChunk=getPosInChunk(worldPos);
+		if(posInChunk.y<0||posInChunk.y>=Chunk.HEIGHT)return null;
 		return c.data[posInChunk.x][posInChunk.y][posInChunk.z];
 	}
 	

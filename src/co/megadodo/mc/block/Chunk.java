@@ -214,7 +214,7 @@ public class Chunk {
 							cm.addAO(accessAORelative(x+1,y+1,z));
 							cm.addAO(accessAORelative(x,y+1,z+1));
 							cm.addAO(accessAORelative(x+1,y+1,z+1));
-							addUV(cm,b.ymi);
+							addUV(cm,b.ypl);
 						}
 						if(isEmptyRelative(x,y,z-1)) {
 							//zmi

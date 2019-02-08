@@ -15,7 +15,7 @@ public class Block {
 	}
 	
 	public Block(AtlasPos top,AtlasPos side,AtlasPos bot) {
-		this(side,side,top,bot,side,side);
+		this(side,side,bot,top,side,side);
 	}
 	
 	public Block(AtlasPos xmi,AtlasPos xpl,AtlasPos ymi,AtlasPos ypl,AtlasPos zmi,AtlasPos zpl) {

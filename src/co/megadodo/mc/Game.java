@@ -17,7 +17,7 @@ public class Game {
 	public Mesh quad;
 	public Shader postprocess;
 	public Text txt;
-	public Camera cam;
+	public Entity player;
 	public Framebuffer fboWorld;
 	public FPSTimer fps;
 	public Timer frameTimer;
@@ -32,11 +32,9 @@ public class Game {
 	public void init(Window window) {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
-
-		cam=new Camera();
-		cam.pos=new Vector3f(2,2,2);
-		cam.dir=new Vector3f(0,0,1);
 		
+		player=new Entity(new Vector3f(0,50,0), new Vector3f(0.25f,1f,0.25f), true);
+
 		
 		quad=new Mesh();
 		quad.addBuffer2f(0, new float[] {
@@ -71,21 +69,22 @@ public class Game {
 			@Override
 			public void onMouseMove(Window window, float mx, float my) {
 				if(inOverlay)return;
-				cam.handleMouseMove(new Vector2f(mx-window.width/2,my-window.height/2));
+				player.cam.handleMouseMove(new Vector2f(mx-window.width/2,my-window.height/2));
 //				window.setMouse(window.width/2, window.height/2);
 			}
 		});
 	}
 	
 	public void update(Window window) {
-		intersection=chunkManager.intersectWorld(cam.pos, cam.dir, 100);
+		intersection=chunkManager.intersectWorld(player.cam.pos, player.cam.dir, 100);
 		fps.countFrame();
 		
 		dt=frameTimer.delta();
-		cam.dt=dt;
+		player.dt=dt;
 		frameTimer.mark();
 		
-		if(!inOverlay)cam.handleInput(window);
+		if(!inOverlay)player.handleInput(window,chunkManager);
+		player.update(chunkManager);
 		
 
 		if(inOverlay)window.releaseMouse();
@@ -99,7 +98,7 @@ public class Game {
 		}
 		
 		if(window.wasKeyJustPressed('C')&&intersection!=null) {
-			int o=5;
+			int o=1;
 			for(int x=-o;x<=o;x++) {
 				for(int y=-o;y<=o;y++) {
 					for(int z=-o;z<=o;z++) {
@@ -123,12 +122,12 @@ public class Game {
 		Utils.initGLFrame(fboWorld);
 		Utils.setDepth(true);
 		
-		chunkManager.render(cam);
-		chunkManager.update(cam);
+		chunkManager.render(player.cam);
+		chunkManager.update(player.cam);
 		
 		if(intersection!=null) {
 //			Utils.setDepth(false);
-			selectedBlockRenderer.render(cam, intersection.hit.x, intersection.hit.y, intersection.hit.z);
+			selectedBlockRenderer.render(player.cam, intersection.hit.x, intersection.hit.y, intersection.hit.z);
 //			Utils.setDepth(true);
 		}
 		
@@ -147,8 +146,8 @@ public class Game {
 		
 
 		txt.setText("Minecraft\n"
-				 + "Camera position: ["+Utils.formatFloat(cam.pos.x)+", "+Utils.formatFloat(cam.pos.y)+", "+Utils.formatFloat(cam.pos.z)+"]\n"
-				 + "Camera direction: ["+Utils.formatFloat(cam.dir.x)+", "+Utils.formatFloat(cam.dir.y)+", "+Utils.formatFloat(cam.dir.z)+"]\n"
+				 + "Camera position: ["+Utils.formatFloat(player.cam.pos.x)+", "+Utils.formatFloat(player.cam.pos.y)+", "+Utils.formatFloat(player.cam.pos.z)+"]\n"
+				 + "Camera direction: ["+Utils.formatFloat(player.cam.dir.x)+", "+Utils.formatFloat(player.cam.dir.y)+", "+Utils.formatFloat(player.cam.dir.z)+"]\n"
 				 + "FPS: "+Utils.formatFloat(fps.getFPS())+"\n"
 				 + "SPF: "+Utils.formatFloat(fps.getSPF())+"\n"
 				 + "DT: "+Utils.formatFloat(dt)+"\n"

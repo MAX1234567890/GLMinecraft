@@ -42,7 +42,7 @@ public class Game {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
 		
-		player=new Entity(new Vector3f(0,50,0), new Vector3f(0.25f,1f,0.25f), true);
+		player=new Entity(new Vector3f(0,25,0), new Vector3f(0.925f,1.85f,0.925f), true);
 
 		panel=new BorderedPanel();
 		blockSprite=new BlockSprite();
@@ -54,10 +54,10 @@ public class Game {
 				Block.stone,
 				Block.oakLog,
 				Block.oakPlanks,
-				null,
-				null,
-				null,
-				null
+				Block.bricks,
+				Block.cobblestone,
+				Block.snowyDirt,
+				Block.snow
 		};
 		
 		quad=new Mesh();
@@ -164,6 +164,8 @@ public class Game {
 			selectedBlockRenderer.render(player.cam, intersection.hit.x, intersection.hit.y, intersection.hit.z);
 //			Utils.setDepth(true);
 		}
+		
+		player.render(player.cam);
 		
 		fboWorld.end();
 		

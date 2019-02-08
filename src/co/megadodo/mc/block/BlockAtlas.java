@@ -12,5 +12,14 @@ public class BlockAtlas {
 	public static final AtlasPos oakPlanks=new AtlasPos(4,15,16,16);
 	public static final AtlasPos oakLogTop=new AtlasPos(5,14,16,16);
 	public static final AtlasPos oakLogSide=new AtlasPos(4,14,16,16);
+	
+	public static final AtlasPos bricks=new AtlasPos(7,15,16,16);
+	
+	public static final AtlasPos cobblestone=new AtlasPos(0,14,16,16);
+	
+	public static final AtlasPos sand=new AtlasPos(2,14,16,16);
+	
+	public static final AtlasPos snowTop=new AtlasPos(2,11,16,16);
+	public static final AtlasPos snowSide=new AtlasPos(4,11,16,16);
 
 }

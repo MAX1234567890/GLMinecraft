@@ -5,12 +5,15 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import co.megadodo.mc.block.Block;
+import co.megadodo.mc.block.BlockAtlas;
 import co.megadodo.mc.gl.Framebuffer;
 import co.megadodo.mc.gl.Mesh;
 import co.megadodo.mc.gl.MouseMoveCallback;
 import co.megadodo.mc.gl.Shader;
 import co.megadodo.mc.gl.Text;
 import co.megadodo.mc.gl.Window;
+import co.megadodo.mc.ui.BlockSprite;
+import co.megadodo.mc.ui.BorderedPanel;
 
 public class Game {
 
@@ -29,12 +32,25 @@ public class Game {
 	
 	public boolean inOverlay;
 	
+	public BorderedPanel panel;
+	public BlockSprite blockSprite;
+	public int hotbarSelection;
+	
+	public Block[] hotbar;
+	
 	public void init(Window window) {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
 		
 		player=new Entity(new Vector3f(0,50,0), new Vector3f(0.25f,1f,0.25f), true);
 
+		panel=new BorderedPanel();
+		blockSprite=new BlockSprite();
+		hotbarSelection=0;
+		
+		hotbar=new Block[] {
+				Block.grass,Block.dirt,Block.stone,null,null,null,null,null,null
+		};
 		
 		quad=new Mesh();
 		quad.addBuffer2f(0, new float[] {
@@ -93,8 +109,8 @@ public class Game {
 		if(window.mouseLeftJustPressed&&intersection!=null) {
 			chunkManager.setAndRemeshBlock(intersection.hit,null);
 		}
-		if(window.mouseRightJustPressed&&intersection!=null) {
-			chunkManager.setAndRemeshBlock(intersection.prev,Block.stone);
+		if(window.mouseRightJustPressed&&intersection!=null&&hotbar[hotbarSelection]!=null) {
+			chunkManager.setAndRemeshBlock(intersection.prev,hotbar[hotbarSelection]);
 		}
 		
 		if(window.wasKeyJustPressed('C')&&intersection!=null) {
@@ -110,6 +126,16 @@ public class Game {
 
 		
 		if(window.isKeyDown('/'))window.close();
+
+		if(window.wasKeyJustPressed('1'))hotbarSelection=0;
+		if(window.wasKeyJustPressed('2'))hotbarSelection=1;
+		if(window.wasKeyJustPressed('3'))hotbarSelection=2;
+		if(window.wasKeyJustPressed('4'))hotbarSelection=3;
+		if(window.wasKeyJustPressed('5'))hotbarSelection=4;
+		if(window.wasKeyJustPressed('6'))hotbarSelection=5;
+		if(window.wasKeyJustPressed('7'))hotbarSelection=6;
+		if(window.wasKeyJustPressed('8'))hotbarSelection=7;
+		if(window.wasKeyJustPressed('9'))hotbarSelection=8;
 		
 		if(window.wasKeyJustPressed(Window.ESCAPE)) {
 			inOverlay=!inOverlay;
@@ -138,7 +164,7 @@ public class Game {
 		Utils.setDepth(false);
 
 		postprocess.bind();
-		postprocess.setBool("overlay",inOverlay);
+		postprocess.set1b("overlay",inOverlay);
 		fboWorld.bindColor(0);
 		postprocess.setSampler("tex", 0);
 		quad.renderElements();
@@ -158,6 +184,14 @@ public class Game {
 				 + "Chunks to rem: "+chunkManager.chunksToRem.size()+"\n"
 				 + "Chunks to remesh: "+chunkManager.chunksToRemesh.size()+"\n");
 		txt.render(-1+0.0025f,1-0.0025f, 0.03f);
+		
+		
+		for(int i=0;i<9;i++) {
+			float s=0.2f;
+			panel.render(i==hotbarSelection,(i-4.5f)*s, -1+s*.75f, s, s);
+			float inset=0.01f;
+			if(hotbar[i]!=null)blockSprite.render(hotbar[i].sprite,(i-4.5f)*s+inset, -1+s*.75f+inset, s-inset*2, s-inset*2);
+		}
 		
 		
 		txt.setText("+");

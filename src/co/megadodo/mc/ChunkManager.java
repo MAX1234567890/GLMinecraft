@@ -18,7 +18,7 @@ public class ChunkManager {
 
 	public Map<Vector2i, Chunk> chunks;
 	public Shader shader;
-	public Texture texture;
+	public static Texture texture;
 	public ArrayList<Vector2i> chunksToAdd;
 	public ArrayList<Vector2i> chunksToRem;
 	public ArrayList<Vector2i> chunksToRemesh;

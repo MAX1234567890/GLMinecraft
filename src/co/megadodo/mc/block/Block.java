@@ -4,21 +4,22 @@ import co.megadodo.mc.gl.AtlasPos;
 
 public class Block {
 	
-	public static final Block grass=new Block(BlockAtlas.grassTop,BlockAtlas.grassSide,BlockAtlas.dirt);
-	public static final Block dirt=new Block(BlockAtlas.dirt);
-	public static final Block stone=new Block(BlockAtlas.stone);
+	public static final Block grass=new Block(BlockAtlas.grassSide,   BlockAtlas.grassTop,BlockAtlas.grassSide,BlockAtlas.dirt);
+	public static final Block dirt=new Block(BlockAtlas.dirt,    BlockAtlas.dirt);
+	public static final Block stone=new Block(BlockAtlas.stone,    BlockAtlas.stone);
 	
-	public AtlasPos xmi,xpl,ymi,ypl,zmi,zpl;
+	public AtlasPos xmi,xpl,ymi,ypl,zmi,zpl,sprite;
 	
-	public Block(AtlasPos ap) {
-		this(ap,ap,ap,ap,ap,ap);
+	public Block(AtlasPos sp,AtlasPos ap) {
+		this(sp,ap,ap,ap,ap,ap,ap);
 	}
 	
-	public Block(AtlasPos top,AtlasPos side,AtlasPos bot) {
-		this(side,side,bot,top,side,side);
+	public Block(AtlasPos sp,AtlasPos top,AtlasPos side,AtlasPos bot) {
+		this(sp,side,side,bot,top,side,side);
 	}
 	
-	public Block(AtlasPos xmi,AtlasPos xpl,AtlasPos ymi,AtlasPos ypl,AtlasPos zmi,AtlasPos zpl) {
+	public Block(AtlasPos sp,AtlasPos xmi,AtlasPos xpl,AtlasPos ymi,AtlasPos ypl,AtlasPos zmi,AtlasPos zpl) {
+		sprite=sp;
 		this.xmi=xmi;
 		this.xpl=xpl;
 		this.ymi=ymi;

@@ -57,12 +57,16 @@ public class Shader {
 		glUniformMatrix4fv(loc,false,buf);
 	}
 	
-	public void setBool(String name,boolean b) {
+	public void set1b(String name,boolean b) {
 		glUniform1i(glGetUniformLocation(id, name), b?GL_TRUE:GL_FALSE);
 	}
 	
 	public void set3f(String name,float x,float y,float z) {
 		glUniform3f(glGetUniformLocation(id, name), x, y, z);
+	}
+	
+	public void set2f(String name,float x,float y) {
+		glUniform2f(glGetUniformLocation(id, name), x, y);
 	}
 	
 	public void set1i(String name,int i) {

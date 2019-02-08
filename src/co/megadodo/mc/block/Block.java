@@ -8,6 +8,9 @@ public class Block {
 	public static final Block dirt=new Block(BlockAtlas.dirt,    BlockAtlas.dirt);
 	public static final Block stone=new Block(BlockAtlas.stone,    BlockAtlas.stone);
 	
+	public static final Block oakPlanks=new Block(BlockAtlas.oakPlanks, BlockAtlas.oakPlanks);
+	public static final Block oakLog=new Block(BlockAtlas.oakLogSide,  BlockAtlas.oakLogTop,BlockAtlas.oakLogSide,BlockAtlas.oakLogTop);
+	
 	public AtlasPos xmi,xpl,ymi,ypl,zmi,zpl,sprite;
 	
 	public Block(AtlasPos sp,AtlasPos ap) {

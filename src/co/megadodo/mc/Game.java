@@ -49,7 +49,15 @@ public class Game {
 		hotbarSelection=0;
 		
 		hotbar=new Block[] {
-				Block.grass,Block.dirt,Block.stone,null,null,null,null,null,null
+				Block.grass,
+				Block.dirt,
+				Block.stone,
+				Block.oakLog,
+				Block.oakPlanks,
+				null,
+				null,
+				null,
+				null
 		};
 		
 		quad=new Mesh();

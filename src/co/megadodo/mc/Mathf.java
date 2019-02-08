@@ -22,6 +22,18 @@ public class Mathf {
 		return (float)Math.sin(f);
 	}
 	
+	public static float random() {
+		return (float)Math.random();
+	}
+	
+	public static int floor(double f) {
+		return (int)Math.floor(f);
+	}
+	
+	public static float abs(float f) {
+		return (float)Math.abs(f);
+	}
+	
 	public static final float PI=3.1415926536f;
 	
 }

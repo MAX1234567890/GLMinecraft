@@ -61,6 +61,10 @@ public class Shader {
 		glUniform1i(glGetUniformLocation(id, name), b?GL_TRUE:GL_FALSE);
 	}
 	
+	public void set3f(String name,float x,float y,float z) {
+		glUniform3f(glGetUniformLocation(id, name), x, y, z);
+	}
+	
 	public void set1i(String name,int i) {
 		glUniform1i(glGetUniformLocation(id, name), i);
 	}

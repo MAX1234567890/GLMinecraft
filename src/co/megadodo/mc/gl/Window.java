@@ -9,6 +9,7 @@ import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.opengl.GL;
 
 public class Window implements Viewport {
@@ -34,6 +35,11 @@ public class Window implements Viewport {
 	public int height;
 	public int fboWidth;
 	public int fboHeight;
+
+	public boolean mouseLeftJustPressed=false;
+	public boolean mouseRightJustPressed=false;
+	public boolean mouseLeftJustReleased=false;
+	public boolean mouseRightJustReleased=false;
 	
 	public static final char LSHIFT=GLFW_KEY_LEFT_SHIFT;
 	public static final char ESCAPE=GLFW_KEY_ESCAPE;
@@ -92,6 +98,26 @@ public class Window implements Viewport {
 		}
 	}
 	
+	private void onMouse(int button,int action,int mods) {
+		if(button==GLFW_MOUSE_BUTTON_LEFT) {
+			if(action==GLFW_PRESS) {
+				mouseLeftJustPressed=true;
+				mouseLeftJustReleased=false;
+			}else if(action==GLFW_RELEASE) {
+				mouseLeftJustPressed=false;
+				mouseLeftJustReleased=true;
+			}
+		}else if(button==GLFW_MOUSE_BUTTON_RIGHT) {
+			if(action==GLFW_PRESS) {
+				mouseRightJustPressed=true;
+				mouseRightJustReleased=false;
+			}else if(action==GLFW_RELEASE) {
+				mouseRightJustPressed=false;
+				mouseRightJustReleased=true;
+			}
+		}
+	}
+	
 	public void startFrame() {
 		updateSize();
 		updateFBOSize();
@@ -146,6 +172,14 @@ public class Window implements Viewport {
 			}
 		});
 
+		glfwSetMouseButtonCallback(ptr, new GLFWMouseButtonCallback() {
+			
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				self.onMouse(button,action,mods);
+			}
+		});
+		
 		glfwMakeContextCurrent(ptr);
 		glfwSwapInterval(1);
 		glfwShowWindow(ptr);
@@ -189,6 +223,9 @@ public class Window implements Viewport {
 		glfwSwapBuffers(ptr);
 		justPressed.clear();
 		justReleased.clear();
+		
+		mouseLeftJustPressed=mouseLeftJustReleased=mouseRightJustPressed=mouseRightJustReleased=false;
+		
 		glfwPollEvents();
 	}
 

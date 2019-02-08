@@ -29,6 +29,18 @@ import co.megadodo.mc.gl.Viewport;
 
 public class Utils {
 	
+	public static void setLineSmooth(boolean b) {
+		if(b) {
+			glEnable(GL_LINE_SMOOTH);
+		}else {
+			glDisable(GL_LINE_SMOOTH);
+		}
+	}
+	
+	public static void setLineWidth(float f) {
+		glLineWidth(f);
+	}
+	
 	public static String formatFloat(float f) {
 		return String.format("%.3f", f);
 	}
@@ -81,6 +93,14 @@ public class Utils {
 		for(int i=0;i<list.size();i++) {
 			data[i*2+0]=list.get(i).x;
 			data[i*2+1]=list.get(i).y;
+		}
+		return data;
+	}
+	
+	public static float[] convertFloatListToArray(ArrayList<Float>list) {
+		float[]data=new float[list.size()];
+		for(int i=0;i<list.size();i++) {
+			data[i]=list.get(i);
 		}
 		return data;
 	}

@@ -37,6 +37,9 @@ void main(){
     
     vec3 color=bg;
     if(font<0.5){
+        float wdist=length(color-vec3(1));
+        float bdist=length(color-vec3(0));
+        float gdist=length(color-vec3(.5));
         color=1.0-color;
     }else{
         discard;

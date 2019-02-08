@@ -141,7 +141,7 @@ public class Entity {
 	}
 	
 	public void handleInput(Window w,ChunkManager cm) {
-		System.out.println(vel.y);
+		System.out.println("vel.y = "+Utils.formatFloat(vel.y));
 		Vector3f f=cam.getForward();
 		Vector3f r=cam.getRight();
 		Vector3f u=new Vector3f(0,1,0);
@@ -169,16 +169,31 @@ public class Entity {
 	}
 	
 	public void update(ChunkManager cm) {
-		cam.pos=new Vector3f(pos.x+size.x/2,pos.y+size.y*0.75f,pos.z+size.z/2);
-		pos.add(basicVerifyMotion(cm,pos,size,getTotalVel().mul(dt)));
+		//something like:  if(dt*length(totalVel)>1){update(dt/2);update(dt/2);}else{doupdate;}
+//		float diff=Mathf.abs(dt*getTotalVel().length());
+//		if(diff>0.01f) {
+//			dt/=2;
+//			update(cm);
+//		}
+//		System.out.println("diff = "+diff+", dt = "+dt);
+		int i=5;
+		for(int n=0;n<i;n++) {
+			cam.pos=new Vector3f(pos.x+size.x/2,pos.y+size.y*0.75f,pos.z+size.z/2);
+			pos.add(basicVerifyMotion(cm,pos,size,getTotalVel().mul(dt/i)));
+			
+			if(!isGrounded(cm)) {
+				vel.y-=15f*dt/i;
+			}else {
+				if(vel.y<0)vel.y=0;
+				if(userVel.y<0)userVel.y=0;
+			}
 		
-		if(!isGrounded(cm)) {
-			vel.y-=15f*dt;
-		}else {
-			vel.y=0;
-			userVel.y=0;
+			if(basicVerifyMotion(cm, pos, size, new Vector3f(0,0.01f,0)).equals(new Vector3f(0,0,0))) {
+				if(vel.y>0)vel.y=0;
+				if(userVel.y>0)userVel.y=0;
+			}
+			
 		}
-		
 		
 	}
 	

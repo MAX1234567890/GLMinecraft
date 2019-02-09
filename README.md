@@ -22,3 +22,6 @@ Contents = LWJGL, GLFW, OpenGL, stb, NOTHING ELSE
 
 Also, somehow download the latest version of JOML for whatever system.
 I don't think JOML is platform specific, *BUT IT MIGHT BE* so download it seperately.
+
+
+Remember to use `-XstartOnFirstThread` as VM arg.

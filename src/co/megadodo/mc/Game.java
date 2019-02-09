@@ -118,9 +118,9 @@ public class Game {
 			chunkManager.setAndRemeshBlock(intersection.hit,null);
 		}
 		if(window.mouseRightJustPressed&&intersection!=null&&hotbar[hotbarSelection]!=null) {
-			chunkManager.setAndRemeshBlock(intersection.prev,hotbar[hotbarSelection]);
+			if(player.intersectsBlock(intersection.prev))chunkManager.setAndRemeshBlock(intersection.prev,hotbar[hotbarSelection]);
 		}
-		
+
 		if(window.wasKeyJustPressed('C')&&intersection!=null) {
 			int o=1;
 			for(int x=-o;x<=o;x++) {
@@ -130,6 +130,30 @@ public class Game {
 					}
 				}
 			}
+		}
+
+		if(window.wasKeyJustPressed('M')&&intersection!=null&&hotbar[hotbarSelection]!=null) {
+			int o=1;
+//			boolean ok=true;
+//			for(int x=-o;x<=o;x++) {
+//				for(int y=-o;y<=o;y++) {
+//					for(int z=-o;z<=o;z++) {
+//						if(player.intersectsBlock(new Vector3i(intersection.prev).add(new Vector3i(x,y,z)))) {
+//							ok=false;
+//							break;
+//						}
+//					}
+//				}
+//			}
+//			if(ok) {
+				for(int x=-o;x<=o;x++) {
+					for(int y=-o;y<=o;y++) {
+						for(int z=-o;z<=o;z++) {
+							if(!player.intersectsBlock(new Vector3i(intersection.prev).add(new Vector3i(x,y,z))))chunkManager.setAndRemeshBlock(new Vector3i(intersection.prev).add(new Vector3i(x,y,z)), hotbar[hotbarSelection]);
+						}
+					}
+				}
+//			}
 		}
 
 		

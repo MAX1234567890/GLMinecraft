@@ -189,6 +189,20 @@ public class Entity {
 		}
 	}
 	
+	public boolean intersectsBlock(Vector3i v) {
+		Vector3i mi=new Vector3i(Mathf.floor(pos.x),Mathf.floor(pos.y),Mathf.floor(pos.z));
+		Vector3i ma=new Vector3i(Mathf.floor(pos.x+size.x),Mathf.floor(pos.y+size.y),Mathf.floor(pos.z+size.z));
+
+		for(int x=mi.x;x<=ma.x;x++) {
+			for(int y=mi.y;y<=ma.y;y++) {
+				for(int z=mi.z;z<=ma.z;z++) {
+					if(v.equals(new Vector3i(x,y,z)))return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 	public void update(ChunkManager cm) {
 		//something like:  if(dt*length(totalVel)>1){update(dt/2);update(dt/2);}else{doupdate;}
 //		float diff=Mathf.abs(dt*getTotalVel().length());
@@ -200,6 +214,7 @@ public class Entity {
 		int i=5;
 		for(int n=0;n<i;n++) {
 			cam.pos=new Vector3f(pos.x+size.x/2,pos.y+size.y,pos.z+size.z/2);
+			if(sneak)cam.pos.y-=0.1f;
 			pos.add(basicVerifyMotion(cm,pos,size,getTotalVel().mul(dt/i),sneak,sneakSpeedMult));
 			
 			if(doGravity) {

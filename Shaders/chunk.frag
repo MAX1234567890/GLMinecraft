@@ -11,7 +11,9 @@ void main(){
     
     float aoFactor=clamp(ao*2.0,0.5,1.0);
     
-    vec3 texColor=texture(tex,uv).xyz;
+    vec4 tc=texture(tex,uv);
+    if(tc.w<0.5)discard;
+    vec3 texColor=tc.xyz;
 //    texColor/=max(texColor.x,max(texColor.y,texColor.z));
     vec3 color=texColor*aoFactor;
     

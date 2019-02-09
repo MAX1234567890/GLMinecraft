@@ -23,6 +23,8 @@ public class ChunkManager {
 	public ArrayList<Vector2i> chunksToRem;
 	public ArrayList<Vector2i> chunksToRemesh;
 	
+	public WorldGenerator worldGen;
+	
 	public static Vector2i getPosInChunk(Vector2i worldPos) {
 		while(worldPos.x<0)worldPos.x+=Chunk.SIZE;
 		while(worldPos.y<0)worldPos.y+=Chunk.SIZE;
@@ -82,7 +84,8 @@ public class ChunkManager {
 			c.chunkManager=this;
 			c.coord=new Vector2i(cx,cz);
 			chunks.put(v, c);
-			c.genTerrain();
+//			c.genTerrain();
+			worldGen.generateData(cx, cz, c.data);
 			return c;
 		}
 		return chunks.get(v);

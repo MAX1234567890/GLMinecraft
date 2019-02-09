@@ -41,6 +41,8 @@ public class Game {
 	public void init(Window window) {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
+		chunkManager.worldGen=new WorldGeneratorFlat();
+		chunkManager.worldGen.init();
 		
 		player=new Entity(new Vector3f(0,25,0), new Vector3f(0.75f,1.85f,0.75f), true);
 
@@ -107,12 +109,15 @@ public class Game {
 		player.dt=dt;
 		frameTimer.mark();
 		
-		if(!inOverlay)player.handleInput(window,chunkManager);
-		player.update(chunkManager);
+		if(!inOverlay) {
+			player.handleInput(window,chunkManager);
+			player.update(chunkManager);
+		}
+		
 		
 
-		if(inOverlay)window.releaseMouse();
-		else window.hideMouse();
+//		if(inOverlay)window.releaseMouse();
+//		else window.hideMouse();
 		
 		if(window.mouseLeftJustPressed&&intersection!=null) {
 			chunkManager.setAndRemeshBlock(intersection.hit,null);
@@ -171,6 +176,8 @@ public class Game {
 		
 		if(window.wasKeyJustPressed(Window.ESCAPE)) {
 			inOverlay=!inOverlay;
+			if(inOverlay)window.releaseMouse();
+			else window.hideMouse();
 		}
 		
 	}

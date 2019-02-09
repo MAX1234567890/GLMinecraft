@@ -1,5 +1,8 @@
 package co.megadodo.mc;
 
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+
 public class Mathf {
 
 	public static float lerp(double a,double b,double t) {
@@ -36,6 +39,24 @@ public class Mathf {
 	
 	public static float atan2(double y,double x) {
 		return (float)Math.atan2(y, x);
+	}
+	
+	public static float fract(float x) {
+		return x%1;
+	}
+	
+	public static Vector2f fract(Vector2f v) {
+		return new Vector2f(fract(v.x),fract(v.y));
+	}
+	
+	private static final float W0=42.14774866190041f;
+	private static final float W1=33.425423425114296f;
+	
+	public static float hash2f(float fx,float fy) {
+		Vector2f c=new Vector2f(5+abs(fx*0.1f),5+abs(fy*123-654));
+		float x=c.x*fract(c.x*W0);
+		float y=c.y*fract(c.y*W1);
+		return fract(x*y);
 	}
 	
 	public static final float PI=3.1415926536f;

@@ -22,6 +22,14 @@ public class Chunk {
 	public Chunk() {
 		data=new Block[SIZE][HEIGHT][SIZE];
 		aoData=new float[SIZE][HEIGHT][SIZE];
+		for(int x=0;x<SIZE;x++) {
+			for(int y=0;y<HEIGHT;y++) {
+				for(int z=0;z<SIZE;z++) {
+					data[x][y][z]=null;
+					aoData[x][y][z]=0;
+				}
+			}
+		}
 	}
 	
 	@Deprecated

@@ -90,9 +90,9 @@ public class Entity {
 		userVel=new Vector3f(0,0,0);
 		doGravity=grav;
 		
-		forwardSpeed=5f;
-		sideSpeed=5f;
-		backSpeed=-5f;
+		forwardSpeed=8f;
+		sideSpeed=8f;
+		backSpeed=-8f;
 		jumpSpeed=10f;
 		
 		cam=new Camera();

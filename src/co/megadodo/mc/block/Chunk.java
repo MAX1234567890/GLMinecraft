@@ -3,11 +3,13 @@ package co.megadodo.mc.block;
 import org.joml.Vector2i;
 import org.joml.Vector3i;
 
+import co.megadodo.mc.Camera;
 import co.megadodo.mc.ChunkManager;
 import co.megadodo.mc.Mathf;
 import co.megadodo.mc.gl.AtlasPos;
 import co.megadodo.mc.gl.ChunkModel;
 import co.megadodo.mc.gl.Mesh;
+import co.megadodo.mc.gl.Shader;
 
 public class Chunk {
 	
@@ -19,7 +21,51 @@ public class Chunk {
 	public Block[][][]data;
 	public float[][][]aoData;
 	
+	public Shader debugShader;
+	public Mesh debugMesh;
+	
 	public Chunk() {
+		debugShader=new Shader("debug-chunk");
+		debugMesh=new Mesh();
+		debugMesh.addBuffer3f(0, new float[] {
+				0,0,0,
+				1,0,0,
+				1,1,0,
+				0,1,0,
+
+				0,0,1,
+				1,0,1,
+				1,1,1,
+				0,1,1,
+
+				0,0,0,
+				0,1,0,
+				0,1,1,
+				0,0,1,
+
+				1,0,0,
+				1,1,0,
+				1,1,1,
+				1,0,1,
+
+				0,0,0,
+				1,0,0,
+				1,0,1,
+				0,0,1,
+
+				0,1,0,
+				1,1,0,
+				1,1,1,
+				0,1,1
+		});
+		debugMesh.setIndices(new int[] {
+				0 ,1 ,    1 ,2 ,    2 ,3 ,    3 ,0 ,
+				4 ,5 ,    5 ,6 ,    6 ,7 ,    7 ,4 ,
+				8 ,9 ,    9 ,10,    10,11,    11,8 ,
+				12,13,    13,14,    14,15,    15,12,
+				16,17,    17,18,    18,19,    19,16,
+				20,21,    21,22,    22,23,    23,20
+		});
 		data=new Block[SIZE][HEIGHT][SIZE];
 		aoData=new float[SIZE][HEIGHT][SIZE];
 		for(int x=0;x<SIZE;x++) {
@@ -85,7 +131,8 @@ public class Chunk {
 			throw new RuntimeException("isEmptyLocal called with out-of-bounds arguments: ["+x+", "+y+", "+z+"].  Use isEmptyRelative instead.");
 		}
 		if(y<0||y>=HEIGHT)return true;
-		return data[x][y][z]==null;
+		if(data[x][y][z]==null)return true;
+		return data[x][y][z].transparent;
 	}
 	
 	public boolean isEmptyRelative(int x,int y,int z) {
@@ -95,9 +142,9 @@ public class Chunk {
 		return ch.isEmptyLocal(p.x, p.y, p.z);
 	}
 	
-	private boolean hasCalcAO=false;
+//	private boolean hasCalcAO=false;
 	private float calcAO(int x,int y,int z) {
-		hasCalcAO=true;
+//		hasCalcAO=true;
 		float f=0;
 		int o=0;
 		float n=0;
@@ -267,6 +314,17 @@ public class Chunk {
 	
 	public void render() {
 		mesh.renderElements();
+	}
+	
+	public void renderDebug(Camera cam) {
+		if(isRenderable()) {
+			debugShader.bind();
+			debugShader.setMat4f("perspective", cam.getPerspective());
+			debugShader.setMat4f("view", cam.getView());
+			debugShader.set3f("scale", SIZE, HEIGHT, SIZE);
+			debugShader.set3f("offset", coord.x*SIZE, 0, coord.y*SIZE);
+			debugMesh.renderLines();
+		}
 	}
 	
 	public boolean isRenderable() {

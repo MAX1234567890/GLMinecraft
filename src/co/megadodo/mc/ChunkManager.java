@@ -86,6 +86,19 @@ public class ChunkManager {
 			chunks.put(v, c);
 //			c.genTerrain();
 			worldGen.generateData(cx, cz, c.data);
+			
+			ArrayList<Pair<Vector3i,Block>>toRem=new ArrayList<Pair<Vector3i,Block>>();
+			for(Pair<Vector3i,Block>pair:worldGen.replacements) {
+//				Vector2i ccoord=getChunkCoord(new Vector2i(pair.k.x,pair.k.z));
+//				if(ccoord.x==cx&&ccoord.y==cz)
+					toRem.add(pair);
+			}
+			for(Pair<Vector3i,Block>pair:toRem) {
+//				System.out.println(pair.k);
+				setAndRemeshBlock(pair.k,pair.v);
+			}
+			worldGen.replacements.removeAll(toRem);
+			
 			return c;
 		}
 		return chunks.get(v);
@@ -102,7 +115,7 @@ public class ChunkManager {
 	
 	public void remeshChunk(Vector2i v) {
 		Chunk c=loadChunk(v.x,v.y);
-		c.createMesh(true);
+		if(c.isRenderable())c.createMesh(true);
 	}
 	
 	
@@ -169,6 +182,13 @@ public class ChunkManager {
 			Chunk c=entry.getValue();
 			if(c.isRenderable()) {
 				c.render();
+			}
+		}
+		for(Map.Entry<Vector2i, Chunk> entry: chunks.entrySet()) {
+			Vector2i cpos=entry.getKey();
+			Chunk c=entry.getValue();
+			if(c.isRenderable()) {
+				c.renderDebug(cam);
 			}
 		}
 	}

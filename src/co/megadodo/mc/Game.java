@@ -41,10 +41,10 @@ public class Game {
 	public void init(Window window) {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
-		chunkManager.worldGen=new WorldGeneratorFlat();
+		chunkManager.worldGen=new WorldGenerator1();
 		chunkManager.worldGen.init();
 		
-		player=new Entity(new Vector3f(0,25,0), new Vector3f(0.75f,1.85f,0.75f), true);
+		player=new Entity(new Vector3f(0,100,0), new Vector3f(0.75f,1.85f,0.75f), true);
 
 		panel=new BorderedPanel();
 		blockSprite=new BlockSprite();

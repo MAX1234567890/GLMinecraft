@@ -5,6 +5,29 @@ import org.joml.Vector4f;
 
 public class Mathf {
 
+	private static OpenSimplexNoise osn;
+	private static float noiseScale;
+	
+	public static void setNoiseScale(float f) {
+		noiseScale=f;
+	}
+	
+	public static void setNoiseSeed(long seed) {
+		osn=new OpenSimplexNoise(seed);
+	}
+	
+	public static float noise(float x,float y) {
+		return (float)osn.eval(noiseScale*x, noiseScale*y);
+	}
+	
+	public static float noise(float x,float y,float z) {
+		return (float)osn.eval(noiseScale*x, noiseScale*y, noiseScale*z);
+	}
+	
+	public static float noise(float x,float y,float z,float w) {
+		return (float)osn.eval(noiseScale*x, noiseScale*y, noiseScale*z, noiseScale*w);
+	}
+	
 	public static float lerp(double a,double b,double t) {
 		return (float)(a+(b-a)*t);
 	}

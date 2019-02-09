@@ -159,7 +159,6 @@ public class Entity {
 	}
 	
 	public void handleInput(Window w,ChunkManager cm) {
-		System.out.println("vel.y = "+Utils.formatFloat(vel.y));
 		Vector3f f=cam.getForward();
 		Vector3f r=cam.getRight();
 		Vector3f u=new Vector3f(0,1,0);

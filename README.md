@@ -1,7 +1,9 @@
 # GLMinecraft
 Java minecraft clone
 
-### BINARIES
+## BINARIES
+https://www.lwjgl.org/customize
+
 Go to green Release tab
 
 Mode = ZIP Bundle

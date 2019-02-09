@@ -19,6 +19,8 @@ public class Camera {
 	 */
 	public float fov;
 	
+	public boolean thirdPerson;
+	
 	public Camera() {
 		pos=new Vector3f(0,0,0);
 		dir=new Vector3f(0,0,0);
@@ -27,6 +29,8 @@ public class Camera {
 		rotY=0;
 		
 		fov=80;
+		
+		thirdPerson=true;
 		
 	}
 	
@@ -43,8 +47,10 @@ public class Camera {
 	}
 	
 	public Matrix4f getView() {
-//		return new Matrix4f().identity().lookAt(pos, new Vector3f(0,0,0).add(pos).add(dir), new Vector3f(0,1,0));
-		return new Matrix4f().identity().lookAt(new Vector3f(pos).sub(new Vector3f(dir).mul(4)), new Vector3f(pos).add(dir), new Vector3f(0,1,0));
+		if(thirdPerson) {
+			return new Matrix4f().identity().lookAt(new Vector3f(pos).sub(new Vector3f(dir).mul(4)), new Vector3f(pos).add(dir), new Vector3f(0,1,0));	
+		}
+		return new Matrix4f().identity().lookAt(pos, new Vector3f(0,0,0).add(pos).add(dir), new Vector3f(0,1,0));
 	}
 	
 	public void handleMouseMove(Vector2f diff) {

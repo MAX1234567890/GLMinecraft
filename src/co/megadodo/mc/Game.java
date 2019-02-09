@@ -42,7 +42,7 @@ public class Game {
 		inOverlay=false;
 		chunkManager=new ChunkManager();
 		
-		player=new Entity(new Vector3f(0,25,0), new Vector3f(0.925f,1.85f,0.925f), true);
+		player=new Entity(new Vector3f(0,25,0), new Vector3f(0.75f,1.85f,0.75f), true);
 
 		panel=new BorderedPanel();
 		blockSprite=new BlockSprite();

@@ -25,6 +25,9 @@ public class Entity {
 	
 	public float dt;
 	
+	public boolean sneak;
+	public float sneakSpeedMult;
+	
 	public Shader shader;
 	public Mesh mesh;
 	
@@ -93,6 +96,10 @@ public class Entity {
 		jumpSpeed=10f;
 		
 		cam=new Camera();
+		cam.thirdPerson=true;
+		
+		sneak=false;
+		sneakSpeedMult=0.5f;
 	}
 	
 	public void setFrameMotion(Vector3f v) {
@@ -118,21 +125,32 @@ public class Entity {
 		return true;
 	}
 	
-	private static Vector3f basicVerifyMotion(ChunkManager cm,Vector3f p,Vector3f s,Vector3f dir) {
+	private static float padding=0.1f;
+	
+	private static Vector3f basicVerifyMotion(ChunkManager cm,Vector3f p,Vector3f s,Vector3f dir,boolean sneak,float sneakMul) {
 		if(dir.x==0&&dir.y==0&&dir.z==0)return dir;
 		Vector3f res=new Vector3f(dir);
 
-		if(!basicVerifyPosition(cm,new Vector3f(p).add(dir.x,0,0),s))res.x=0;
-		if(!basicVerifyPosition(cm,new Vector3f(p).add(0,dir.y,0),s))res.y=0;
-		if(!basicVerifyPosition(cm,new Vector3f(p).add(0,0,dir.z),s))res.z=0;
+		int dx=(dir.x<0?-1:(dir.x>0?1:0));
+		int dy=(dir.y<0?-1:(dir.y>0?1:0));
+		int dz=(dir.z<0?-1:(dir.z>0?1:0));
+
+		if(!basicVerifyPosition(cm,new Vector3f(p).add(dx*padding,0,0),s))res.x=0;
+		if(!basicVerifyPosition(cm,new Vector3f(p).add(0,dy*padding,0),s))res.y=0;
+		if(!basicVerifyPosition(cm,new Vector3f(p).add(0,0,dz*padding),s))res.z=0;
 		
+		if(sneak) {
+			if(basicVerifyPosition(cm,new Vector3f(p).add(dx*padding,-1,0),s))res.x=0;
+			if(basicVerifyPosition(cm,new Vector3f(p).add(0,-1,dz*padding),s))res.z=0;
+			res=res.mul(sneakMul);
+		}
 		return res;
 	}
 	
 	public boolean isGrounded(ChunkManager cm) {
 		//dir=0 => true
 		//dir!=0 => false
-		return basicVerifyMotion(cm, pos, size, new Vector3f(0,-0.1f,0)).equals(new Vector3f(0,0,0));
+		return basicVerifyMotion(cm, pos, size, new Vector3f(0,-padding,0),sneak,sneakSpeedMult).equals(new Vector3f(0,0,0));
 //		return false;
 	}
 	
@@ -153,19 +171,23 @@ public class Entity {
 		if(w.isKeyDown('A'))motion.add(new Vector3f(r).mul(-sideSpeed));
 		if(w.isKeyDown('D'))motion.add(new Vector3f(r).mul(sideSpeed));
 		if(w.wasKeyJustPressed(' ')&&isGrounded(cm))dv.add(new Vector3f(0,jumpSpeed,0));
+		sneak=w.isKeyDown(Window.LSHIFT);
+		if(w.wasKeyJustPressed('P'))cam.thirdPerson=!cam.thirdPerson;
 		
 		userVel=motion;
 		vel.add(dv);
 	}
 	
 	public void render(Camera c) {
-		shader.bind();
-		shader.setMat4f("perspective", c.getPerspective());
-		shader.setMat4f("view",c.getView());
-		shader.setMat4f("model", new Matrix4f().identity().rotate(Mathf.atan2(cam.dir.x,cam.dir.z), 0,1,0));
-		shader.set3f("pos", pos.x, pos.y, pos.z);
-		shader.set3f("size", size.x, size.y, size.z);
-		mesh.renderElements();
+		if(cam.thirdPerson) {
+			shader.bind();
+			shader.setMat4f("perspective", c.getPerspective());
+			shader.setMat4f("view",c.getView());
+			shader.setMat4f("model", new Matrix4f().identity().rotate(Mathf.atan2(cam.dir.x,cam.dir.z), 0,1,0));
+			shader.set3f("pos", pos.x, pos.y, pos.z);
+			shader.set3f("size", size.x, size.y, size.z);
+			mesh.renderElements();
+		}
 	}
 	
 	public void update(ChunkManager cm) {
@@ -178,17 +200,19 @@ public class Entity {
 //		System.out.println("diff = "+diff+", dt = "+dt);
 		int i=5;
 		for(int n=0;n<i;n++) {
-			cam.pos=new Vector3f(pos.x+size.x/2,pos.y+size.y*0.75f,pos.z+size.z/2);
-			pos.add(basicVerifyMotion(cm,pos,size,getTotalVel().mul(dt/i)));
+			cam.pos=new Vector3f(pos.x+size.x/2,pos.y+size.y,pos.z+size.z/2);
+			pos.add(basicVerifyMotion(cm,pos,size,getTotalVel().mul(dt/i),sneak,sneakSpeedMult));
 			
-			if(!isGrounded(cm)) {
-				vel.y-=15f*dt/i;
-			}else {
-				if(vel.y<0)vel.y=0;
-				if(userVel.y<0)userVel.y=0;
+			if(doGravity) {
+				if(!isGrounded(cm)) {
+					vel.y-=40f*dt/i;
+				}else {
+					if(vel.y<0)vel.y=0;
+					if(userVel.y<0)userVel.y=0;
+				}
 			}
 		
-			if(basicVerifyMotion(cm, pos, size, new Vector3f(0,0.01f,0)).equals(new Vector3f(0,0,0))) {
+			if(basicVerifyMotion(cm, pos, size, new Vector3f(0,padding,0),sneak,sneakSpeedMult).equals(new Vector3f(0,0,0))) {
 				if(vel.y>0)vel.y=0;
 				if(userVel.y>0)userVel.y=0;
 			}
